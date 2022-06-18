@@ -1,19 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
 
     public Rigidbody2D rigidbody2d;
 
+    public GameObject gameWonPanel;
+
+    public GameObject gamePausePanel;
+    public Button continueButton;
     public float speed;
     public float maxSpeed;
     public float acceleration;
 
+    private bool isGameWon;
+    private bool isGamePaused = false;
+
+
+    void Start()
+    {
+        Button btn = continueButton.GetComponent<Button>();
+        btn.onClick.AddListener(ContinueOnClick);
+
+    }
 
     void Update()
     {
+        if (isGameWon == true)
+        {
+            return;
+        }
+
+        if (Input.GetButtonDown("Cancel"))
+        {
+            gamePausePanel.SetActive(true);
+            isGamePaused = true;
+            rigidbody2d.velocity = new Vector2(0f, 0f);
+        }
+
         if (speed < maxSpeed)
         {
             speed += acceleration * Time.deltaTime;
@@ -49,7 +76,18 @@ public class PlayerController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Door")
+        {
             Debug.Log("Level Completed!!!");
+            gameWonPanel.SetActive(true);
+            isGameWon = true;
+
+        }
+    }
+
+    void ContinueOnClick()
+    {
+        gamePausePanel.SetActive(false);
+        isGamePaused = false;
     }
 
 
