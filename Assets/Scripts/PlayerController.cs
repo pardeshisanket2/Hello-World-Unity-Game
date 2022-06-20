@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,14 +10,14 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rigidbody2d;
 
     public GameObject gameWonPanel;
-
+    public GameObject gameLostPanel;
     public GameObject gamePausePanel;
     public Button continueButton;
     public float speed;
     public float maxSpeed;
     public float acceleration;
 
-    private bool isGameWon;
+    private bool isGameOver;
     private bool isGamePaused = false;
 
 
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (isGameWon == true)
+        if (isGameOver == true)
         {
             return;
         }
@@ -79,7 +80,15 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Level Completed!!!");
             gameWonPanel.SetActive(true);
-            isGameWon = true;
+            isGameOver = true;
+
+        }
+
+        else if (other.tag == "Enemy")
+        {
+            Debug.Log("Game Over!!!");
+            gameLostPanel.SetActive(true);
+            isGameOver = true;
 
         }
     }
@@ -89,6 +98,13 @@ public class PlayerController : MonoBehaviour
         gamePausePanel.SetActive(false);
         isGamePaused = false;
     }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); //In your game, theres is only one level so SceneManager.GetActiveScene().buildIndex = 0th level
+    }
+
+
 
 
 }
